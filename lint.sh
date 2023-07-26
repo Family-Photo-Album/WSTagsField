@@ -1,0 +1,1 @@
+swiftlint . --fix --no-cache

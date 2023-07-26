@@ -193,7 +193,7 @@ open class WSTagsField: UIScrollView {
             return true
         }
 
-        for i in 0..<tagViews.count where tagViews[i].isFirstResponder {
+        for idx in 0..<tagViews.count where tagViews[idx].isFirstResponder {
             return true
         }
 
@@ -491,8 +491,8 @@ open class WSTagsField: UIScrollView {
 
         let nextIndex = tagViews.index(after: selectedIndex)
         if nextIndex < tagViews.count {
-            tagViews[selectedIndex].selected = false
-            tagViews[nextIndex].selected = true
+            tagViews[selectedIndex].set(selected: false)
+            tagViews[nextIndex].set(selected: true)
         }
         else {
             textField.becomeFirstResponder()
@@ -506,8 +506,8 @@ open class WSTagsField: UIScrollView {
 
         let prevIndex = tagViews.index(before: selectedIndex)
         if prevIndex >= 0 {
-            tagViews[selectedIndex].selected = false
-            tagViews[prevIndex].selected = true
+            tagViews[selectedIndex].set(selected: false)
+            tagViews[prevIndex].set(selected: true)
         }
     }
 
@@ -522,10 +522,10 @@ open class WSTagsField: UIScrollView {
         }
 
         tagView.isCouldBeFirstResponder = !readOnly
-        tagView.selected = true
+        tagView.set(selected: true)
         tagViews.filter { $0 != tagView }.forEach { [weak self] in
             guard let self else { return }
-            $0.selected = false
+            $0.set(selected: false)
             self.onDidUnselectTagView?(self, $0)
         }
 
@@ -535,7 +535,7 @@ open class WSTagsField: UIScrollView {
     open func unselectAllTagViewsAnimated(_ animated: Bool = false) {
         tagViews.forEach { [weak self] in
             guard let self else { return }
-            $0.selected = false
+            $0.set(selected: false)
             onDidUnselectTagView?(self, $0)
         }
     }
@@ -674,7 +674,7 @@ extension WSTagsField {
         let maxWidth: CGFloat = layoutWidth - contentInset.left - contentInset.right
         var curX: CGFloat = 0.0
         var curY: CGFloat = 0.0
-        var totalHeight: CGFloat = Constants.STANDARD_ROW_HEIGHT
+        var totalHeight: CGFloat = Constants.standartRowHeight
 
         // Tag views Rects
         var tagRect = CGRect.null
@@ -684,13 +684,13 @@ extension WSTagsField {
             if curX + tagRect.width > maxWidth {
                 // Need a new line
                 curX = 0
-                curY += Constants.STANDARD_ROW_HEIGHT + spaceBetweenLines
-                totalHeight += Constants.STANDARD_ROW_HEIGHT
+                curY += Constants.standartRowHeight + spaceBetweenLines
+                totalHeight += Constants.standartRowHeight
             }
 
             tagRect.origin.x = curX
             // Center our tagView vertically within STANDARD_ROW_HEIGHT
-            tagRect.origin.y = curY + ((Constants.STANDARD_ROW_HEIGHT - tagRect.height)/2.0)
+            tagRect.origin.y = curY + ((Constants.standartRowHeight - tagRect.height)/2.0)
 
             closure(tagView, tagRect, nil)
 
@@ -698,20 +698,20 @@ extension WSTagsField {
         }
 
         // Always indent TextField by a little bit
-        curX += max(0, Constants.TEXT_FIELD_HSPACE - spaceBetweenTags)
+        curX += max(0, Constants.textFieldHSpace - spaceBetweenTags)
         var availableWidthForTextField: CGFloat = maxWidth - curX
 
         if textField.isEnabled {
             var textFieldRect = CGRect.zero
-            textFieldRect.size.height = Constants.STANDARD_ROW_HEIGHT
+            textFieldRect.size.height = Constants.standartRowHeight
 
-            if availableWidthForTextField < Constants.MINIMUM_TEXTFIELD_WIDTH {
+            if availableWidthForTextField < Constants.minTextfieldWidth {
                 // If in the future we add more UI elements below the tags,
                 // isOnFirstLine will be useful, and this calculation is important.
                 // So leaving it set here, and marking the warning to ignore it
-                curX = 0 + Constants.TEXT_FIELD_HSPACE
-                curY += Constants.STANDARD_ROW_HEIGHT + spaceBetweenLines
-                totalHeight += Constants.STANDARD_ROW_HEIGHT
+                curX = 0 + Constants.textFieldHSpace
+                curY += Constants.standartRowHeight + spaceBetweenLines
+                totalHeight += Constants.standartRowHeight
                 // Adjust the width
                 availableWidthForTextField = maxWidth - curX
             }
@@ -791,7 +791,7 @@ extension WSTagsField {
 
     private var maxHeightBasedOnNumberOfLines: CGFloat {
         guard numberOfLines > 0 else { return CGFloat.infinity }
-        return contentInset.top + contentInset.bottom + Constants.STANDARD_ROW_HEIGHT * CGFloat(numberOfLines)
+        return contentInset.top + contentInset.bottom + Constants.standartRowHeight * CGFloat(numberOfLines)
             + spaceBetweenLines * CGFloat(numberOfLines - 1)
     }
 

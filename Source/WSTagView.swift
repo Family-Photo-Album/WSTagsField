@@ -79,19 +79,21 @@ open class WSTagView: UIView, UITextInputTraits {
 
     internal var isCouldBeFirstResponder = true
 
-    open var selected: Bool = false {
+    open private(set) var selected: Bool = false {
         didSet {
-            if isCouldBeFirstResponder {
-                if selected && !isFirstResponder {
-                    _ = becomeFirstResponder()
-                } else
-                if !selected && isFirstResponder {
-                    _ = resignFirstResponder()
-                }
-            }
+            guard isCouldBeFirstResponder else { return }
 
-            updateContent(animated: true)
+            if selected && !isFirstResponder {
+                _ = becomeFirstResponder()
+            } else if !selected && isFirstResponder {
+                _ = resignFirstResponder()
+            }
         }
+    }
+
+    public func set(selected: Bool, animated: Bool = true) {
+        self.selected = selected
+        updateContent(animated: animated)
     }
 
     // MARK: - UITextInputTraits
@@ -144,10 +146,7 @@ open class WSTagView: UIView, UITextInputTraits {
     }
 
     internal func updateContent(animated: Bool) {
-        guard animated else {
-            updateColors()
-            return
-        }
+        guard animated else { updateColors(); return }
 
         UIView.animate(
             withDuration: 0.2,

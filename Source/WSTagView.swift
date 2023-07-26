@@ -77,14 +77,19 @@ open class WSTagView: UIView, UITextInputTraits {
     internal var onDidRequestSelection: ((_ tagView: WSTagView) -> Void)?
     internal var onDidInputText: ((_ tagView: WSTagView, _ text: String) -> Void)?
 
+    internal var isCouldBeFirstResponder = true
+
     open var selected: Bool = false {
         didSet {
-            if selected && !isFirstResponder {
-                _ = becomeFirstResponder()
+            if isCouldBeFirstResponder {
+                if selected && !isFirstResponder {
+                    _ = becomeFirstResponder()
+                } else
+                if !selected && isFirstResponder {
+                    _ = resignFirstResponder()
+                }
             }
-            else if !selected && isFirstResponder {
-                _ = resignFirstResponder()
-            }
+
             updateContent(animated: true)
         }
     }

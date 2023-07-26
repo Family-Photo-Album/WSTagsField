@@ -521,6 +521,7 @@ open class WSTagsField: UIScrollView {
             return
         }
 
+        tagView.isCouldBeFirstResponder = !readOnly
         tagView.selected = true
         tagViews.filter { $0 != tagView }.forEach { [weak self] in
             guard let self else { return }

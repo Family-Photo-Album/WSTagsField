@@ -125,7 +125,6 @@ open class WSTagsField: UIScrollView {
         didSet { textField.textColor = fieldTextColor }
     }
 
-    @available(iOS 10.0, *)
     @available(*, deprecated, message: "use 'textField.fieldTextContentType' directly.")
     open var fieldTextContentType: UITextContentType! {
         get { textField.textContentType }
@@ -300,19 +299,9 @@ open class WSTagsField: UIScrollView {
     }
 
     deinit {
-        if #available(iOS 13, *) {
-            // Observers should be cleared when NSKeyValueObservation is deallocated.
-            // Let's just keep the code for older iOS versions unmodified to make
-            // sure we don't break anything.
-            layerBoundsObserver = nil
-        }
-        else {
-            if let observer = layerBoundsObserver {
-                removeObserver(observer, forKeyPath: "layer.bounds")
-                observer.invalidate()
-                layerBoundsObserver = nil
-            }
-        }
+        // Observers should be cleared when NSKeyValueObservation is deallocated.
+        // Let's just keep the code for older iOS versions unmodified to make sure we don't break anything.
+        layerBoundsObserver = nil
     }
 
     open override func willMove(toSuperview newSuperview: UIView?) {
@@ -544,7 +533,6 @@ open class WSTagsField: UIScrollView {
 
     // Reposition tag views when bounds changes.
     fileprivate var layerBoundsObserver: NSKeyValueObservation?
-
 }
 
 // MARK: TextField Properties

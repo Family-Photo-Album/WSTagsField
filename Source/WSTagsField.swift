@@ -202,6 +202,8 @@ open class WSTagsField: UIScrollView {
     open fileprivate(set) var tags = [WSTag]()
     open var tagViews = [WSTagView]()
 
+    open var intrinsicContentHeight: CGFloat { oldIntrinsicContentHeight }
+
     // MARK: - Events
 
     /// Called when the text field should return.
